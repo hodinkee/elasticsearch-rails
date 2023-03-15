@@ -13,6 +13,10 @@ class Elasticsearch::Model::SearchTest < Test::Unit::TestCase
         'insta barr'
       end
 
+      def keyword_method(foo: 'default value')
+        foo
+      end
+
       def as_json(options)
         {foo: 'bar'}
       end
@@ -93,6 +97,10 @@ class Elasticsearch::Model::SearchTest < Test::Unit::TestCase
     should "have inspect method indicating the proxy" do
       assert_match /PROXY/, DummyProxyModel.__elasticsearch__.inspect
       assert_match /PROXY/, DummyProxyModel.new.__elasticsearch__.inspect
+    end
+
+    should "forward keyword arguments to target methods" do
+      asset_equal('bar', DummyProxyModel.new.__elasticsearch__.keyword_method(foo: 'bar'))
     end
   end
 end
